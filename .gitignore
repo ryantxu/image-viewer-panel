@@ -1,0 +1,7 @@
+node_modules/
+coverage/
+ci/
+cypress/screenshots/
+cypress/videos/
+dist/
+provisioning/
