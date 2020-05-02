@@ -1,8 +1,8 @@
-import React, { PureComponent } from "react";
-import { PanelProps, FieldType, dateTime } from "@grafana/data";
-import { SimpleOptions } from "types";
-import { css } from "emotion";
-import { stylesFactory, Modal } from "@grafana/ui";
+import React, { PureComponent } from 'react';
+import { PanelProps, FieldType, dateTime } from '@grafana/data';
+import { SimpleOptions } from 'types';
+import { css } from 'emotion';
+import { stylesFactory, Modal } from '@grafana/ui';
 
 interface ImageInfo {
   time: number; // ms
@@ -45,7 +45,7 @@ export class ImageViewer extends PureComponent<Props, State> {
           images.push({
             time,
             percent: (time - min) / (max - min),
-            image: stringField.values.get(i)
+            image: stringField.values.get(i),
           });
         }
       }
@@ -59,7 +59,7 @@ export class ImageViewer extends PureComponent<Props, State> {
         {images.map(info => {
           const style: any = {};
           const classes = [thumbWidth, styles.thumb];
-          if (options.mode === "timeline") {
+          if (options.mode === 'timeline') {
             const left = info.percent * (width - options.thumbWidth);
             style.left = `${left}px`;
             classes.push(styles.timeline);
@@ -69,7 +69,7 @@ export class ImageViewer extends PureComponent<Props, State> {
             <img
               key={info.time}
               style={style}
-              className={classes.join(" ")}
+              className={classes.join(' ')}
               src={`data:image/png;charset=utf-8;base64, ${info.image}`}
               onClick={() => this.onClick(info)}
             />
@@ -88,9 +88,7 @@ export class ImageViewer extends PureComponent<Props, State> {
           isOpen={!!selected}
         >
           <div>
-            <img
-              src={`data:image/png;charset=utf-8;base64, ${selected?.image}`}
-            />
+            <img src={`data:image/png;charset=utf-8;base64, ${selected?.image}`} />
           </div>
         </Modal>
       </div>
@@ -111,7 +109,7 @@ const getStyles = stylesFactory(() => {
       &:hover {
         border: 2px solid red;
         transform: scale(1.1);
-        z-index:20;
+        z-index: 20;
       }
     `,
     timeline: css`
@@ -119,6 +117,6 @@ const getStyles = stylesFactory(() => {
       margin-left: auto;
       margin-right: auto;
       display: block;
-    `
+    `,
   };
 });
