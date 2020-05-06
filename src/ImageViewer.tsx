@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
-import { PanelProps, FieldType, dateTime } from '@grafana/data';
+import { PanelProps, FieldType, dateTime, DataFrame } from '@grafana/data';
 import { SimpleOptions } from 'types';
 import { css } from 'emotion';
 import { stylesFactory, Modal } from '@grafana/ui';
+import { StreamHandler } from 'mjpeg';
 
 interface ImageInfo {
   time: number; // ms
@@ -14,10 +15,47 @@ interface Props extends PanelProps<SimpleOptions> {}
 
 interface State {
   selected?: ImageInfo;
+  stream?: DataFrame;
 }
 
 export class ImageViewer extends PureComponent<Props, State> {
   state: State = {};
+  stream: StreamHandler;
+
+  constructor(props: Props) {
+    super(props);
+    this.stream = new StreamHandler(this.onCameraUpdate);
+  }
+
+  componentDidMount() {
+    this.checkStream();
+  }
+
+  onCameraUpdate = (images: DataFrame) => {
+    const { source } = this.props.options;
+    if (source === 'stream') {
+      this.setState({ stream: images });
+    } else {
+      this.setState({ stream: undefined });
+      this.stream.close();
+    }
+  };
+
+  componentDidUpdate(old: Props) {
+    const { source, imageUrl } = this.props.options;
+    if (source !== old.options.source || imageUrl !== old.options.imageUrl) {
+      this.checkStream();
+    }
+  }
+
+  checkStream = () => {
+    const { source, imageUrl } = this.props.options;
+    if (source === 'stream' && imageUrl) {
+      this.stream.open(imageUrl);
+    } else {
+      this.stream.close();
+    }
+  };
 
   onClick = (img?: ImageInfo) => {
     this.setState({ selected: img });
@@ -32,11 +70,16 @@ export class ImageViewer extends PureComponent<Props, State> {
     const images: ImageInfo[] = [];
 
     const { timeRange } = data;
-    const min = timeRange.from.valueOf();
-    const max = timeRange.to.valueOf();
+    let frames = data.series;
+    let min = timeRange.from.valueOf();
+    let max = timeRange.to.valueOf();
+    if (options.source === 'stream') {
+      const {stream} = this.state;
+      frames = stream ? [stream] : [];
+    }
 
     // Find the data
-    for (const frame of data.series) {
+    for (const frame of frames) {
       const timeField = frame.fields.find(f => f.type === FieldType.time);
       const stringField = frame.fields.find(f => f.type === FieldType.string);
       if (timeField && stringField) {
