@@ -16,9 +16,10 @@
     "email": "plugins@grafana.com"
   },
   "devDependencies": {
-    "@grafana/data": "next",
-    "@grafana/toolkit": "next",
-    "@grafana/ui": "next",
+    "@grafana/data": "canary",
+    "@grafana/toolkit": "canary",
+    "@grafana/ui": "canary",
+    "@grafana/runtime": "canary",
     "emotion": "10.0.27"
   },
   "engines": {

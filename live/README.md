@@ -8,3 +8,6 @@ sudo motion
 
 then:
 http://localhost:8081/
+
+
+ https://motion-project.github.io/

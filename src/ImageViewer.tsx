@@ -4,6 +4,7 @@ import { SimpleOptions } from 'types';
 import { css } from 'emotion';
 import { stylesFactory, Modal } from '@grafana/ui';
 import { StreamHandler } from 'mjpeg';
+import { getLegacyAngularInjector, SystemJS } from '@grafana/runtime';
 
 interface ImageInfo {
   time: number; // ms
@@ -15,6 +16,7 @@ interface Props extends PanelProps<SimpleOptions> {}
 
 interface State {
   selected?: ImageInfo;
+  hover?: number;
   stream?: DataFrame;
 }
 
@@ -22,14 +24,88 @@ export class ImageViewer extends PureComponent<Props, State> {
   state: State = {};
   stream: StreamHandler;
 
+  dashboard: any;
+  appEvents: any;
+
   constructor(props: Props) {
     super(props);
     this.stream = new StreamHandler(this.onCameraUpdate);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.checkStream();
+
+    const $injector = getLegacyAngularInjector();
+
+    // HACK HACK.. use with super super caution
+    this.appEvents = await SystemJS.import( 'app/core/app_events');
+
+    //this.timeSrv = $injector.get('timeSrv');
+    const dashboardSrv = $injector.get('dashboardSrv');
+    this.dashboard = dashboardSrv.dashboard;
+    this.appEvents.on( 'graph-hover', this.onGraphHover );
+    this.appEvents.on(
+      'graph-hover-clear',
+      () => {
+        this.setState( {hover:undefined});
+      }
+    );
   }
+
+  componentWillUnmount() {
+    this.appEvents.off( 'graph-hover', this.onGraphHover );
+  }
+
+  onGraphHover = (evt:any) => {
+    if(evt.panel?.id === this.props.id) {
+      return; // same panel;
+    }
+    const time = evt.pos?.x;
+    if(time) {
+      debugger;
+      const {hover} = this.state;
+      const closest = this.findClosestImage(time);
+      if( closest ) {
+        if(hover != closest) {
+          this.setState( {hover:closest});
+        }
+      }
+      else if(hover) {
+        this.setState( {hover:undefined});
+      }
+    }
+  }
+
+  findClosestImage = (cursor:number): number|undefined => {
+    let diff = Number.MAX_SAFE_INTEGER;
+    let closest: number|undefined = undefined;
+
+    const {data,options} = this.props;
+    let frames = data.series;
+    if (options.source === 'stream') {
+      const { stream } = this.state;
+      frames = stream ? [stream] : [];
+    }
+
+    // Find the data
+    for (const frame of frames) {
+      const timeField = frame.fields.find(f => f.type === FieldType.time);
+      const stringField = frame.fields.find(f => f.type === FieldType.string);
+      if (timeField && stringField) {
+        for (let i = 0; i < stringField.values.length; i++) {
+          const time = dateTime(timeField.values.get(i)).valueOf();
+          const delta = Math.abs(time - cursor);
+          if(delta < diff) {
+            closest = time;
+            diff = delta;
+          }
+        }
+      }
+    }
+
+    return closest;
+  }
+
 
   onCameraUpdate = (images: DataFrame) => {
     const { source } = this.props.options;
@@ -63,7 +139,7 @@ export class ImageViewer extends PureComponent<Props, State> {
 
   render() {
     const { options, data, width } = this.props;
-    const { selected } = this.state;
+    const { selected, hover } = this.state;
     const styles = getStyles();
     console.log(styles);
 
@@ -74,7 +150,7 @@ export class ImageViewer extends PureComponent<Props, State> {
     let min = timeRange.from.valueOf();
     let max = timeRange.to.valueOf();
     if (options.source === 'stream') {
-      const {stream} = this.state;
+      const { stream } = this.state;
       frames = stream ? [stream] : [];
     }
 
@@ -106,6 +182,10 @@ export class ImageViewer extends PureComponent<Props, State> {
             const left = info.percent * (width - options.thumbWidth);
             style.left = `${left}px`;
             classes.push(styles.timeline);
+          }
+
+          if(info.time === hover) {
+            classes.push(styles.graphHover);
           }
 
           return (
@@ -154,6 +234,11 @@ const getStyles = stylesFactory(() => {
         transform: scale(1.1);
         z-index: 20;
       }
+    `,
+    graphHover: css`
+      border: 2px solid red;
+      transform: scale(1.1);
+      z-index: 20;
     `,
     timeline: css`
       position: absolute;
