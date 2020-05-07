@@ -1,4 +1,5 @@
 import { CircularDataFrame, FieldType, MutableVector, DataFrame } from '@grafana/data';
+import { getTemplateSrv } from '@grafana/runtime';
 
 interface StreamInfo {
   stream: string;
@@ -22,6 +23,7 @@ export class StreamHandler {
   info: StreamInfo;
   isOpen: boolean;
   reader?: ReadableStreamReader<Uint8Array>;
+  templateSrv: any;
 
   images: CircularDataFrame = new CircularDataFrame({ capacity: 30 });
   time: MutableVector<number>;
@@ -45,9 +47,11 @@ export class StreamHandler {
     this.image = this.images.addField({ name: 'Image', type: FieldType.string }).values;
 
     this.isOpen = false;
+    this.templateSrv = getTemplateSrv();
   }
 
   open(url: string) {
+    url = this.templateSrv.replace(url);
     if (this.url === url && this.isOpen) {
       console.log('Already open...', url);
       return;
@@ -87,16 +91,16 @@ export class StreamHandler {
           this.headers += String.fromCharCode(value[index]);
         }
         // we're now reading the jpeg.
-        else if (this.bytesRead < this.contentLength) {
+        else if (this.bytesRead <= this.contentLength) {
           this.imageBuffer[this.bytesRead++] = value[index];
         } else {
           const b64 = btoa(String.fromCharCode.apply(null, (this.imageBuffer as unknown) as number[]));
-          this.time.add(Date.now());
+          this.time.add(getTime(this.headers));
           this.image.add(b64);
 
           // // we're done reading the jpeg. Time to render it.
           // const obj = URL.createObjectURL(new Blob([this.imageBuffer], {type: 'image/jpeg'}));
-          console.log('added image... : ' + this.bytesRead);
+          console.log('added image... : ' + this.bytesRead + ' ts: ' + getTime(this.headers));
           this.callback(this.images);
 
           // document.getElementById('image').src = ;
@@ -146,4 +150,14 @@ function getLength(headers: string) {
     }
   }
   return -1;
+}
+
+function getTime(headers: string): number {
+  for (const header of headers.split('\n')) {
+    const pair = header.split(':');
+    if (pair.length === 2 && 'x-timestamp' === pair[0].toLowerCase()) {
+      return new Date(+pair[1].trim()).getTime();
+    }
+  }
+  return Date.now();
 }
