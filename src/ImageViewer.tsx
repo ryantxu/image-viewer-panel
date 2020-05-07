@@ -38,56 +38,50 @@ export class ImageViewer extends PureComponent<Props, State> {
     const $injector = getLegacyAngularInjector();
 
     // HACK HACK.. use with super super caution
-    this.appEvents = await SystemJS.import( 'app/core/app_events');
+    this.appEvents = await SystemJS.import('app/core/app_events');
 
     //this.timeSrv = $injector.get('timeSrv');
     const dashboardSrv = $injector.get('dashboardSrv');
     this.dashboard = dashboardSrv.dashboard;
-    this.appEvents.on( 'graph-hover', this.onGraphHover );
-    this.appEvents.on(
-      'graph-hover-clear',
-      () => {
-        this.setState( {hover:undefined});
-      }
-    );
+    this.appEvents.on('graph-hover', this.onGraphHover);
+    this.appEvents.on('graph-hover-clear', () => {
+      this.setState({ hover: undefined });
+    });
   }
 
   componentWillUnmount() {
-    this.appEvents.off( 'graph-hover', this.onGraphHover );
+    this.appEvents.off('graph-hover', this.onGraphHover);
   }
 
-  onGraphHover = (evt:any) => {
-    if(evt.panel?.id === this.props.id) {
+  onGraphHover = (evt: any) => {
+    if (evt.panel?.id === this.props.id) {
       return; // same panel;
     }
     const time = evt.pos?.x;
-    if(time) {
-      debugger;
-      const {hover} = this.state;
+    if (time) {
+      const { hover } = this.state;
       const closest = this.findClosestImage(time);
-      if( closest ) {
-        if(hover != closest) {
-          this.setState( {hover:closest});
+      if (closest) {
+        if (hover !== closest) {
+          this.setState({ hover: closest });
         }
-      }
-      else if(hover) {
-        this.setState( {hover:undefined});
+      } else if (hover) {
+        this.setState({ hover: undefined });
       }
     }
-  }
+  };
 
-  findClosestImage = (cursor:number): number|undefined => {
+  findClosestImage = (cursor: number): number | undefined => {
     let diff = Number.MAX_SAFE_INTEGER;
-    let closest: number|undefined = undefined;
+    let closest: number | undefined = undefined;
 
-    const {data,options} = this.props;
+    const { data, options } = this.props;
     let frames = data.series;
     if (options.source === 'stream') {
       const { stream } = this.state;
       frames = stream ? [stream] : [];
     }
 
-    // Find the data
     for (const frame of frames) {
       const timeField = frame.fields.find(f => f.type === FieldType.time);
       const stringField = frame.fields.find(f => f.type === FieldType.string);
@@ -95,7 +89,7 @@ export class ImageViewer extends PureComponent<Props, State> {
         for (let i = 0; i < stringField.values.length; i++) {
           const time = dateTime(timeField.values.get(i)).valueOf();
           const delta = Math.abs(time - cursor);
-          if(delta < diff) {
+          if (delta < diff) {
             closest = time;
             diff = delta;
           }
@@ -104,8 +98,7 @@ export class ImageViewer extends PureComponent<Props, State> {
     }
 
     return closest;
-  }
-
+  };
 
   onCameraUpdate = (images: DataFrame) => {
     const { source } = this.props.options;
@@ -184,7 +177,7 @@ export class ImageViewer extends PureComponent<Props, State> {
             classes.push(styles.timeline);
           }
 
-          if(info.time === hover) {
+          if (info.time === hover) {
             classes.push(styles.graphHover);
           }
 
