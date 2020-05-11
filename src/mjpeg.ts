@@ -31,7 +31,7 @@ export class StreamHandler {
 
   // MJpeg
   headers = '';
-  contentLength = -1;
+  contentLength = 0;
   imageBuffer: Uint8Array = new Uint8Array();
   bytesRead = 0;
 
@@ -80,8 +80,12 @@ export class StreamHandler {
         if (value[index] === SOI[0] && value[index + 1] === SOI[1]) {
           const len = getLength(this.headers);
           if (len > 0) {
-            this.contentLength = len;
-            this.imageBuffer = new Uint8Array(new ArrayBuffer(len));
+            // Some jpegs seem to have multiple start bytes, only init on the first
+            if (this.contentLength === 0) {
+              console.log('jpeg start byte: ' + index);
+              this.contentLength = len;
+              this.imageBuffer = new Uint8Array(new ArrayBuffer(len));
+            }
           } else {
             console.log('Did not find length in: ' + this.headers);
           }
@@ -100,7 +104,9 @@ export class StreamHandler {
 
           // // we're done reading the jpeg. Time to render it.
           // const obj = URL.createObjectURL(new Blob([this.imageBuffer], {type: 'image/jpeg'}));
-          console.log('added image... : ' + this.bytesRead + ' ts: ' + getTime(this.headers));
+          console.log(
+            'added image... : ' + this.bytesRead + ' ts: ' + getTime(this.headers) + ' content: ' + this.contentLength
+          );
           this.callback(this.images);
 
           // document.getElementById('image').src = ;
