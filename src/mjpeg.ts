@@ -23,7 +23,6 @@ export class StreamHandler {
   info: StreamInfo;
   isOpen: boolean;
   reader?: ReadableStreamReader<Uint8Array>;
-  templateSrv: any;
 
   images: CircularDataFrame = new CircularDataFrame({ capacity: 30 });
   time: MutableVector<number>;
@@ -47,11 +46,10 @@ export class StreamHandler {
     this.image = this.images.addField({ name: 'Image', type: FieldType.string }).values;
 
     this.isOpen = false;
-    this.templateSrv = getTemplateSrv();
   }
 
   open(url: string) {
-    url = this.templateSrv.replace(url);
+    url = getTemplateSrv().replace(url);
     if (this.url === url && this.isOpen) {
       console.log('Already open...', url);
       return;
