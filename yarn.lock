@@ -960,7 +960,7 @@
     rxjs "6.5.5"
     xss "1.0.6"
 
-"@grafana/e2e-selectors@^7.1.0-pre.0-184941eab4", "@grafana/e2e-selectors@^7.1.0-pre.0-fae2356a86":
+"@grafana/e2e-selectors@^7.1.0-pre.0-184941eab4":
   version "7.1.0-pre.0-184941eab4"
   resolved "https://registry.yarnpkg.com/@grafana/e2e-selectors/-/e2e-selectors-7.1.0-pre.0-184941eab4.tgz#353c226153e472260dbaeca457ceeb7c998abfbd"
   integrity sha512-ECwTksqgN2qodREbvMSHWlz81ONpIhjVNjDIa3nVaLOA/Bxw3Pu7X3wP75VMQNKP6PKQN7yS0n0GFRhOyEJHzw==
@@ -969,6 +969,17 @@
     commander "5.0.0"
     execa "4.0.0"
     typescript "3.7.5"
+    yaml "^1.8.3"
+
+"@grafana/e2e-selectors@^7.1.0-pre.0-fae2356a86":
+  version "7.5.8"
+  resolved "https://registry.yarnpkg.com/@grafana/e2e-selectors/-/e2e-selectors-7.5.8.tgz#be3bc944427b94508a05027759f8fbdaadfebefb"
+  integrity sha512-YhgKEfyorbzPCnMkYgTZH0oS/uzP2bA2QGPp67FL6v8+ySsaEuvy8FmMla3m9cIfq32V75dnNWm7ZNCL2Z3FCQ==
+  dependencies:
+    "@grafana/tsconfig" "^1.0.0-rc1"
+    commander "5.0.0"
+    execa "4.0.0"
+    typescript "4.1.2"
     yaml "^1.8.3"
 
 "@grafana/eslint-config@^1.0.0-rc1":
@@ -9131,9 +9142,9 @@ postcss-values-parser@^2.0.0, postcss-values-parser@^2.0.1:
     uniq "^1.0.1"
 
 postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.16, postcss@^7.0.17, postcss@^7.0.2, postcss@^7.0.26, postcss@^7.0.27, postcss@^7.0.5, postcss@^7.0.6:
-  version "7.0.29"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-7.0.29.tgz#d3a903872bd52280b83bce38cdc83ce55c06129e"
-  integrity sha512-ba0ApvR3LxGvRMMiUa9n0WR4HjzcYm7tS+ht4/2Nd0NLtHpPIH77fuB9Xh1/yJVz9O/E/95Y/dn8ygWsyffXtw==
+  version "7.0.36"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-7.0.36.tgz#056f8cffa939662a8f5905950c07d5285644dfcb"
+  integrity sha512-BebJSIUMwJHRH0HAQoxN4u1CN86glsrwsW0q7T+/m44eXOUAxSNdHRkNZPYz5vVUbg17hFgOQDE7fZk7li3pZw==
   dependencies:
     chalk "^2.4.2"
     source-map "^0.6.1"
@@ -11420,6 +11431,11 @@ typescript@3.7.5:
   version "3.7.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
   integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
+
+typescript@4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.2.tgz#6369ef22516fe5e10304aae5a5c4862db55380e9"
+  integrity sha512-thGloWsGH3SOxv1SoY7QojKi0tc+8FnOmiarEGMbd/lar7QOEd3hvlx3Fp5y6FlDUGl9L+pd4n2e+oToGMmhRQ==
 
 typical@^2.6.1:
   version "2.6.1"
