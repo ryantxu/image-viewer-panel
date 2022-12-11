@@ -960,7 +960,7 @@
     rxjs "6.5.5"
     xss "1.0.6"
 
-"@grafana/e2e-selectors@^7.1.0-pre.0-184941eab4", "@grafana/e2e-selectors@^7.1.0-pre.0-fae2356a86":
+"@grafana/e2e-selectors@^7.1.0-pre.0-184941eab4":
   version "7.1.0-pre.0-184941eab4"
   resolved "https://registry.yarnpkg.com/@grafana/e2e-selectors/-/e2e-selectors-7.1.0-pre.0-184941eab4.tgz#353c226153e472260dbaeca457ceeb7c998abfbd"
   integrity sha512-ECwTksqgN2qodREbvMSHWlz81ONpIhjVNjDIa3nVaLOA/Bxw3Pu7X3wP75VMQNKP6PKQN7yS0n0GFRhOyEJHzw==
@@ -969,6 +969,17 @@
     commander "5.0.0"
     execa "4.0.0"
     typescript "3.7.5"
+    yaml "^1.8.3"
+
+"@grafana/e2e-selectors@^7.1.0-pre.0-fae2356a86":
+  version "7.5.17"
+  resolved "https://registry.yarnpkg.com/@grafana/e2e-selectors/-/e2e-selectors-7.5.17.tgz#61c3819b5a704da2a8f181d8e944aa19ad1c579f"
+  integrity sha512-dKVKqlJ48vKXFhk5leiTyaHBujyhaszIZv5z0MZmNosAnNG6g/OvgXpKf8ALc8CYQ3BitGSZ/xqeHrrH87jqMg==
+  dependencies:
+    "@grafana/tsconfig" "^1.0.0-rc1"
+    commander "5.0.0"
+    execa "4.0.0"
+    typescript "4.1.2"
     yaml "^1.8.3"
 
 "@grafana/eslint-config@^1.0.0-rc1":
@@ -9353,9 +9364,9 @@ q@^1.1.2:
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
 
 qs@~6.5.2:
-  version "6.5.2"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
-  integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.3.tgz#3aeeffc91967ef6e35c0e488ef46fb296ab76aad"
+  integrity sha512-qxXIEh4pCGfHICj1mAJQ2/2XVZkjCDTcEgfoSQxc/fYivUZxTkk7L3bDBJSoNrEzXI17oUO5Dp07ktqE5KzczA==
 
 query-string@^4.1.0:
   version "4.3.4"
@@ -11420,6 +11431,11 @@ typescript@3.7.5:
   version "3.7.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
   integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
+
+typescript@4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.2.tgz#6369ef22516fe5e10304aae5a5c4862db55380e9"
+  integrity sha512-thGloWsGH3SOxv1SoY7QojKi0tc+8FnOmiarEGMbd/lar7QOEd3hvlx3Fp5y6FlDUGl9L+pd4n2e+oToGMmhRQ==
 
 typical@^2.6.1:
   version "2.6.1"
